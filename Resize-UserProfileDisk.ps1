@@ -312,6 +312,8 @@ function Resize-UserProfileDisk {
             foreach ($vhdx in $vhdxArray) {             
                 try {
                     Write-Log -severity Information -message " "
+                    #Generate an array of the existing drive letters in use
+                    $ExistingDrives = (Get-Volume).DriveLetter
                     Write-Log -severity Information -message "Defrag: Try to mount VHDX-file $vhdx..."
                     $MountResult = Mount-DiskImage $vhdx
                     Start-Sleep -Seconds 15
@@ -326,7 +328,12 @@ function Resize-UserProfileDisk {
 
                 try {
                     Write-Log -severity Information -message "Defrag: Checking for driveletter mounted $vhdx..." 
-                    $DriveLetter = ($MountResult | Get-Disk | Get-Partition).DriveLetter
+                    #generate an array of drive letters after the VHDX is mounted
+                    $DrivesAfterMount = (Get-Volume).DriveLetter
+                    #Figure out the differences between the two arrays to find the drive letter of the mounted VHDX
+					$DriveLetter = "$(($DrivesAfterMount -join '').replace(($ExistingDrives -join ''), ''))"
+                    #Had issues with the original not correctly finding the drive letter, hence changes above 
+                    #$DriveLetter = ($MountResult | Get-Disk | Get-Partition).DriveLetter
                     Write-Log -severity Information -message "Defrag: Checking for driveletter mounted $vhdx... Done. Detected driveletter: $Driveletter"
                 } 
                 Catch {
