@@ -328,11 +328,11 @@ function Resize-UserProfileDisk {
 
                 try {
                     Write-Log -severity Information -message "Defrag: Checking for driveletter mounted $vhdx..." 
-                    #generate an array of drive letters after the VHDX is mounted
+                    #Generate an array of drive letters after the VHDX is mounted
                     $DrivesAfterMount = (Get-Volume).DriveLetter
                     #Figure out the differences between the two arrays to find the drive letter of the mounted VHDX
-					$DriveLetter = "$(($DrivesAfterMount -join '').replace(($ExistingDrives -join ''), ''))"
-                    #Had issues with the original not correctly finding the drive letter, hence changes above 
+		    $DriveLetter = "$(($DrivesAfterMount -join '').replace(($ExistingDrives -join ''), ''))"
+                    #Had issues with this original $DriveLetter one liner not working, hence changes above 
                     #$DriveLetter = ($MountResult | Get-Disk | Get-Partition).DriveLetter
                     Write-Log -severity Information -message "Defrag: Checking for driveletter mounted $vhdx... Done. Detected driveletter: $Driveletter"
                 } 
